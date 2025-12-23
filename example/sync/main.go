@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tursodatabase/go-libsql"
+	"github.com/maozhijie/go-libsql"
 )
 
 func run() (err error) {

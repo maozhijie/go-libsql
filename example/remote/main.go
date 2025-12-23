@@ -21,7 +21,7 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/tursodatabase/go-libsql"
+	_ "github.com/maozhijie/go-libsql"
 )
 
 func main() {

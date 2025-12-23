@@ -16,7 +16,7 @@ Currently `linux amd64`, `linux arm64`, `darwin amd64`, `darwin arm64` and `wind
 ## Installing
 
 ```
-go get github.com/tursodatabase/go-libsql
+go get github.com/maozhijie/go-libsql
 ```
 
 `go-libsql` uses `CGO` to make calls to LibSQL. You must build your binaries with `CGO_ENABLED=1`.

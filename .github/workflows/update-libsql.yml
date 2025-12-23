@@ -21,7 +21,7 @@ jobs:
       - name: Checkout libsql at tag
         uses: actions/checkout@v4
         with:
-          repository: tursodatabase/libsql
+          repository: maozhijie/libsql
           ref: ${{ env.LIBSQL_TAG }}
           path: libsql
 
@@ -75,7 +75,7 @@ jobs:
       - name: Checkout libsql at tag
         uses: actions/checkout@v4
         with:
-          repository: tursodatabase/libsql
+          repository: maozhijie/libsql
           ref: ${{ env.LIBSQL_TAG }}
           path: libsql
 
@@ -125,7 +125,7 @@ jobs:
       - name: Checkout libsql at tag
         uses: actions/checkout@v4
         with:
-          repository: tursodatabase/libsql
+          repository: maozhijie/libsql
           ref: ${{ env.LIBSQL_TAG }}
           path: libsql
 
