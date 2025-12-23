@@ -8,7 +8,9 @@ cargo install cross
 
 ```
 git clone https://github.com/tursodatabase/libsql.git
-cd libsql/bindings/c
+cd libsql
+git checkout libsql-0.9.29
+cd bindings/c
 ```
 
 Linux（推荐用 `cross`）：

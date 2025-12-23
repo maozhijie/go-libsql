@@ -6,7 +6,7 @@ on:
       libsql_tag:
         description: "libsql repository tag to build (e.g. libsql-0.9.4)"
         required: true
-        default: "libsql-0.9.4"
+        default: "libsql-0.9.29"
 
 jobs:
   extract-headers:
@@ -36,7 +36,7 @@ jobs:
           name: libsql-headers
           path: include/
 
-  build-linux:
+  build-cross-platform:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -148,7 +148,7 @@ jobs:
           path: go-libsql/lib/darwin_arm64
 
   verify-linux-amd64:
-    needs: [build-linux, extract-headers]
+    needs: [build-cross-platform, extract-headers]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout go-libsql
@@ -186,7 +186,7 @@ jobs:
           echo "Linux AMD64 build successful!"
 
   verify-linux-arm64:
-    needs: [build-linux, extract-headers]
+    needs: [build-cross-platform, extract-headers]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout go-libsql
@@ -267,7 +267,7 @@ jobs:
           echo "Darwin ARM64 build successful!"
 
   verify-windows-amd64:
-    needs: [build-linux, extract-headers]
+    needs: [build-cross-platform, extract-headers]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout go-libsql
