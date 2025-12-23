@@ -5,8 +5,7 @@ This source repository contains libSQL API bindings for Go.
 
 ## Notice
 This package comes with a precompiled native libraries.
-Currently only `linux amd64`, `linux arm64`, `darwin amd64` and `darwin arm64` are supported.
-We're working on adding support for more platforms.
+Currently `linux amd64`, `linux arm64`, `darwin amd64`, `darwin arm64` and `windows amd64` are supported.
 
 ## Features
 

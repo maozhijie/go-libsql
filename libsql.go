@@ -9,8 +9,9 @@ package libsql
 #cgo darwin,arm64 LDFLAGS: -L${SRCDIR}/lib/darwin_arm64
 #cgo linux,amd64 LDFLAGS: -L${SRCDIR}/lib/linux_amd64
 #cgo linux,arm64 LDFLAGS: -L${SRCDIR}/lib/linux_arm64
+#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/lib/windows_amd64
 #cgo LDFLAGS: -lsql_experimental
-#cgo LDFLAGS: -lm
+#cgo !windows LDFLAGS: -lm
 #cgo darwin LDFLAGS: -framework Security
 #cgo darwin LDFLAGS: -framework CoreFoundation
 #include <libsql.h>

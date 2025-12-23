@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       libsql_tag:
-        description: 'libsql repository tag to build (e.g. libsql-0.9.4)'
+        description: "libsql repository tag to build (e.g. libsql-0.9.4)"
         required: true
-        default: 'libsql-0.9.4'
+        default: "libsql-0.9.4"
 
 jobs:
   extract-headers:
@@ -40,12 +40,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu]
+        target:
+          [
+            x86_64-unknown-linux-gnu,
+            aarch64-unknown-linux-gnu,
+            x86_64-pc-windows-gnu,
+          ]
         include:
           - target: x86_64-unknown-linux-gnu
             output_dir: linux_amd64
           - target: aarch64-unknown-linux-gnu
             output_dir: linux_arm64
+          - target: x86_64-pc-windows-gnu
+            output_dir: windows_amd64
     steps:
       - name: Checkout go-libsql
         uses: actions/checkout@v4
@@ -169,7 +176,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: "1.20"
 
       - name: Verify Linux AMD64 build
         run: |
@@ -207,7 +214,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: "1.20"
 
       - name: Install cross-compiler for ARM64
         run: |
@@ -250,7 +257,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: "1.20"
 
       - name: Verify Darwin ARM64 build
         run: |
@@ -259,8 +266,57 @@ jobs:
           GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 go build -v
           echo "Darwin ARM64 build successful!"
 
+  verify-windows-amd64:
+    needs: [build-linux, extract-headers]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout go-libsql
+        uses: actions/checkout@v4
+
+      - name: Download Windows AMD64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: libsql-windows_amd64
+          path: lib/windows_amd64
+
+      - name: Download headers
+        uses: actions/download-artifact@v4
+        with:
+          name: libsql-headers
+          path: lib/include
+
+      - name: Check binary details
+        run: |
+          echo "Windows AMD64 library size:"
+          ls -la lib/windows_amd64/libsql_experimental.a
+          echo "Header file:"
+          ls -la lib/include/libsql.h
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+
+      - name: Install cross-compiler for Windows AMD64
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64
+
+      - name: Verify Windows AMD64 build
+        run: |
+          echo "Building example/local/main.go for Windows AMD64..."
+          cd example/local
+          CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -v
+          echo "Windows AMD64 build successful!"
+
   update-repository:
-    needs: [verify-linux-amd64, verify-linux-arm64, verify-darwin-arm64]
+    needs:
+      [
+        verify-linux-amd64,
+        verify-linux-arm64,
+        verify-darwin-arm64,
+        verify-windows-amd64,
+      ]
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
@@ -274,10 +330,11 @@ jobs:
 
       - name: Copy artifacts to repository
         run: |
-          mkdir -p lib/linux_amd64 lib/linux_arm64 lib/darwin_arm64 lib/include
+          mkdir -p lib/linux_amd64 lib/linux_arm64 lib/darwin_arm64 lib/windows_amd64 lib/include
           cp -r artifacts/libsql-linux_amd64/* lib/linux_amd64/
           cp -r artifacts/libsql-linux_arm64/* lib/linux_arm64/
           cp -r artifacts/libsql-darwin_arm64/* lib/darwin_arm64/
+          cp -r artifacts/libsql-windows_amd64/* lib/windows_amd64/
 
           # only copy header if it changed
           if ! cmp -s artifacts/libsql-headers/libsql.h lib/include/libsql.h 2>/dev/null; then
@@ -303,13 +360,14 @@ jobs:
           title: "Update libsql libraries to `${{ env.LIBSQL_TAG }}`"
           body: |
             This PR updates the libsql static libraries to version `${{ env.LIBSQL_TAG }}`.
-            
+
             Libraries updated:
             - `linux_amd64/libsql_experimental.a`
             - `linux_arm64/libsql_experimental.a`
             - `darwin_arm64/libsql_experimental.a`
+            - `windows_amd64/libsql_experimental.a`
             - `include/libsql.h` (if changed)
-            
+
             This update was generated automatically by the [update-libsql workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
           branch: update-${{ env.LIBSQL_TAG }}
           delete-branch: true
