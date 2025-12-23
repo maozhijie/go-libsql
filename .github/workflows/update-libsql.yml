@@ -29,6 +29,12 @@ jobs:
         run: |
           mkdir -p include
           cp libsql/bindings/c/include/libsql.h include/
+          if ! grep -q "libsql_open_remote_with_remote_encryption" include/libsql.h; then
+            echo "Error: libsql.h does not contain libsql_open_remote_with_remote_encryption"
+            echo "Header content:"
+            cat include/libsql.h
+            exit 1
+          fi
 
       - name: Upload header artifact
         uses: actions/upload-artifact@v4
