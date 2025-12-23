@@ -10,9 +10,8 @@ package libsql
 #cgo linux,amd64 LDFLAGS: -L${SRCDIR}/lib/linux_amd64
 #cgo linux,arm64 LDFLAGS: -L${SRCDIR}/lib/linux_arm64
 #cgo windows,amd64 LDFLAGS: -L${SRCDIR}/lib/windows_amd64
-#cgo windows LDFLAGS: -lws2_32 -luserenv -lbcrypt
-#cgo LDFLAGS: -lsql_experimental
-#cgo !windows LDFLAGS: -lm
+#cgo windows LDFLAGS: -lsql_experimental -lws2_32 -luserenv -lbcrypt -lntdll -lcrypt32 -lsecur32 -lncrypt
+#cgo !windows LDFLAGS: -lsql_experimental -lm
 #cgo darwin LDFLAGS: -framework Security
 #cgo darwin LDFLAGS: -framework CoreFoundation
 #include <libsql.h>

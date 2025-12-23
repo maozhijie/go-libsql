@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/tursodatabase/go-libsql"
 	"os"
+
+	_ "github.com/maozhijie/go-libsql"
 )
 
 func run() (err error) {
