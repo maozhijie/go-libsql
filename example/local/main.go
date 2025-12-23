@@ -3,18 +3,16 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"os"
-
 	_ "github.com/maozhijie/go-libsql"
 )
 
 func run() (err error) {
-	dir, err := os.MkdirTemp("", "libsql-*")
+	//dir, err := os.MkdirTemp("", "libsql-*")
 	if err != nil {
 		return err
 	}
-	defer os.RemoveAll(dir)
-	db, err := sql.Open("libsql", "file:"+dir+"/test.db")
+	//defer os.RemoveAll(dir)
+	db, err := sql.Open("libsql", "file:./test.db")
 	if err != nil {
 		return err
 	}
